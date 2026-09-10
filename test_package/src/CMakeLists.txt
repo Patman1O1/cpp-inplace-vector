@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Target: test_package
 # Type: Executable
-# Dependencies: cpp_inplace_vector::cpp_inplace_vector
+# Dependencies: collections::inplace_vector
 # ─────────────────────────────────────────────────────────────────────────────
 # Target definition
 add_executable(test_package)
@@ -15,5 +15,5 @@ target_sources(test_package
 # Target dependencies
 target_link_libraries(test_package
     PRIVATE
-        cpp_inplace_vector::cpp_inplace_vector
+        collections::inplace_vector
 )
