@@ -1,6 +1,6 @@
 # ── Information ──────────────────────────────────────────────────────────────
 cmake_minimum_required(VERSION 4.3.0)
-project("cpp_inplace_vector"
+project("inplace_vector"
         VERSION 0.1.0
         DESCRIPTION ""
         LANGUAGES CXX
@@ -68,50 +68,50 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
 endif()
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Target: cpp_inplace_vector_headers
-# Alias: cpp_inplace_vector::cpp_inplace_vector_headers
+# Target: inplace_vector_headers
+# Alias: inplace_vector::inplace_vector_headers
 # Type: Interface Library
 # ───────────────────────────────────────────────────────────────────────────── 
 # Target definition
-add_library(cpp_inplace_vector_headers INTERFACE)
+add_library(inplace_vector_headers INTERFACE)
 
 # Target alias
-add_library(cpp_inplace_vector::cpp_inplace_vector_headers 
+add_library(inplace_vector::inplace_vector_headers 
     ALIAS
-        cpp_inplace_vector_headers
+        inplace_vector_headers
 )
 
 # Target headers
-target_include_directories(cpp_inplace_vector_headers
+target_include_directories(inplace_vector_headers
     INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Target: cpp_inplace_vector
-# Alias: cpp_inplace_vector::cpp_inplace_vector
+# Target: inplace_vector
+# Alias: inplace_vector::inplace_vector
 # Type: Interface Library
-# Dependencies: cpp_inplace_vector::cpp_inplace_vector_headers
+# Dependencies: inplace_vector::inplace_vector_headers
 # ─────────────────────────────────────────────────────────────────────────────
 # Target definition
-add_library(cpp_inplace_vector INTERFACE)
+add_library(inplace_vector INTERFACE)
 
 # Target alias
-add_library(cpp_inplace_vector::cpp_inplace_vector
+add_library(inplace_vector::inplace_vector
     ALIAS
-        cpp_inplace_vector
+        inplace_vector
 )
 
 # Target dependencies
-target_link_libraries(cpp_inplace_vector
+target_link_libraries(inplace_vector
     INTERFACE
-        cpp_inplace_vector::cpp_inplace_vector_headers
+        inplace_vector::inplace_vector_headers
 )
 
 # Target properties
-set_target_properties(cpp_inplace_vector PROPERTIES
-        OUTPUT_NAME cpp_inplace_vector
+set_target_properties(inplace_vector PROPERTIES
+        OUTPUT_NAME inplace_vector
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
         CXX_VISIBILITY_PRESET hidden
@@ -119,12 +119,12 @@ set_target_properties(cpp_inplace_vector PROPERTIES
 )
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-    # Install cpp_inplace_vector
-    install(TARGETS cpp_inplace_vector
-            RUNTIME COMPONENT cpp_inplace_vector
-            LIBRARY COMPONENT cpp_inplace_vector
-            NAMELINK_COMPONENT cpp_inplace_vector
-            ARCHIVE COMPONENT cpp_inplace_vector
+    # Install inplace_vector
+    install(TARGETS inplace_vector
+            RUNTIME COMPONENT inplace_vector
+            LIBRARY COMPONENT inplace_vector
+            NAMELINK_COMPONENT inplace_vector
+            ARCHIVE COMPONENT inplace_vector
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()
 
