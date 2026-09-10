@@ -85,18 +85,23 @@ namespace collections {
 
         // ── Overloaded Operators ────────────────────────────────────────────
         // TODO: Need to implement
-        constexpr inplace_vector& operator=(const inplace_vector& other);
+        constexpr auto operator=(
+            const inplace_vector& other
+        ) -> inplace_vector&;
 
         // TODO: Need to implement
-        constexpr inplace_vector& operator=(inplace_vector&& other) noexcept(
+        constexpr auto operator=(
+            inplace_vector&& other
+        ) noexcept(
             N == 0 ||
             (std::is_nothrow_move_assignable_v<value_type> &&
             std::is_nothrow_move_constructible_v<value_type>)
-        );
+        ) -> inplace_vector&;
 
         // TODO: Need to implement
-        constexpr inplace_vector& operator=(std::initializer_list<T> init);
-
+        constexpr auto operator=(
+            std::initializer_list<value_type> values
+        ) -> inplace_vector&;
 
         [[nodiscard]]
         constexpr auto operator==(const inplace_vector& rhs) const noexcept(
