@@ -5,7 +5,7 @@
 #include <iostream>
 
 // Local Includes
-#include <cpp_inplace_vector/cpp_inplace_vector.hpp>
+#include <collections/inplace_vector.hpp>
 
 auto main() -> int {
     std::println(std::cout, "Hello world!");
