@@ -69,14 +69,14 @@ endif()
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Target: inplace_vector_headers
-# Alias: inplace_vector::inplace_vector_headers
+# Alias: collections::inplace_vector_headers
 # Type: Interface Library
 # ───────────────────────────────────────────────────────────────────────────── 
 # Target definition
 add_library(inplace_vector_headers INTERFACE)
 
 # Target alias
-add_library(inplace_vector::inplace_vector_headers 
+add_library(collections::inplace_vector_headers 
     ALIAS
         inplace_vector_headers
 )
@@ -90,15 +90,15 @@ target_include_directories(inplace_vector_headers
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Target: inplace_vector
-# Alias: inplace_vector::inplace_vector
+# Alias: collections::inplace_vector
 # Type: Interface Library
-# Dependencies: inplace_vector::inplace_vector_headers
+# Dependencies: collections::inplace_vector_headers
 # ─────────────────────────────────────────────────────────────────────────────
 # Target definition
 add_library(inplace_vector INTERFACE)
 
 # Target alias
-add_library(inplace_vector::inplace_vector
+add_library(collections::inplace_vector
     ALIAS
         inplace_vector
 )
@@ -106,7 +106,7 @@ add_library(inplace_vector::inplace_vector
 # Target dependencies
 target_link_libraries(inplace_vector
     INTERFACE
-        inplace_vector::inplace_vector_headers
+        collections::inplace_vector_headers
 )
 
 # Target properties
