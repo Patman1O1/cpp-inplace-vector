@@ -1,5 +1,5 @@
-#ifndef COLLECTIONS_ARRAY_HPP
-#define COLLECTIONS_ARRAY_HPP
+#ifndef COLLECTIONS_INPLACE_VECTOR_HPP
+#define COLLECTIONS_INPLACE_VECTOR_HPP
 
 // ISO C Includes
 #include <cstddef>
@@ -9,15 +9,12 @@
 #include <algorithm>
 #include <compare>
 #include <concepts>
-#include <expected>
-#include <functional>
 #include <iterator>
-#include <stdexcept>
 #include <type_traits>
 
 namespace collections {
     template<typename T, std::size_t N>
-    class array {
+    class inplace_vector {
     public:
         // ── Aliases ─────────────────────────────────────────────────────────
         using value_type = T;
@@ -42,22 +39,74 @@ namespace collections {
 
         using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-        // ── error ───────────────────────────────────────────────────────────
-        enum class error : std::uint8_t { out_of_range, };
-
+    private:
         // ── Fields ──────────────────────────────────────────────────────────
         value_type values_[N];
 
+        size_type sz_;
+
+    public:
+        // ── Constructors ────────────────────────────────────────────────────
+        // TODO: Need to implement
+        constexpr inplace_vector() noexcept;
+
+        // TODO: Need to implement
+        constexpr explicit inplace_vector(const size_type count);
+
+        // TODO: Need to implement
+        constexpr inplace_vector(
+            const size_type count,
+            const_reference value
+        );
+
+        // TODO: Need to implement
+        template<std::input_iterator InputIt>
+        constexpr inplace_vector(InputIt first, InputIt last);
+
+        // TODO: Need to implement
+        template<std::ranges::input_range R> requires (
+            std::convertible_to<std::ranges::range_reference_t<R>, value_type>
+        )
+        constexpr inplace_vector(std::from_range_t, R&& rg);
+
+        // TODO: Need to implement
+        constexpr inplace_vector(const inplace_vector& other);
+
+        // TODO: Need to implement
+        constexpr inplace_vector(inplace_vector&& other) noexcept(
+            N == 0 || std::is_nothrow_move_constructible_v<value_type>
+        );
+
+        // TODO: Need to implement
+        constexpr inplace_vector(std::initializer_list<value_type> values);
+        
+        // ── Destructor ──────────────────────────────────────────────────────
+        constexpr ~inplace_vector() noexcept = default;
+
         // ── Overloaded Operators ────────────────────────────────────────────
+        // TODO: Need to implement
+        constexpr inplace_vector& operator=(const inplace_vector& other);
+
+        // TODO: Need to implement
+        constexpr inplace_vector& operator=(inplace_vector&& other) noexcept(
+            N == 0 ||
+            (std::is_nothrow_move_assignable_v<value_type> &&
+            std::is_nothrow_move_constructible_v<value_type>)
+        );
+
+        // TODO: Need to implement
+        constexpr inplace_vector& operator=(std::initializer_list<T> init);
+
+
         [[nodiscard]]
-        constexpr auto operator==(const array& rhs) const noexcept(
+        constexpr auto operator==(const inplace_vector& rhs) const noexcept(
             noexcept(std::declval<value_type>() == std::declval<value_type>())
         ) -> bool {
             return std::equal(this->begin(), this->end(), rhs.begin());
         }
 
         [[nodiscard]]
-        constexpr auto operator<=>(const array& rhs) const noexcept(
+        constexpr auto operator<=>(const inplace_vector& rhs) const noexcept(
             noexcept(std::declval<value_type>() <=> std::declval<value_type>())
         ) -> std::compare_three_way_result_t<value_type> {
             return std::lexicographical_compare_three_way(
@@ -66,15 +115,17 @@ namespace collections {
             );
         }
         
+        // TODO: Need to implement
         [[nodiscard]]
         constexpr auto operator[](
             const size_type index
-        ) noexcept -> reference { return this->values_[index]; }
+        ) noexcept -> reference;
 
+        // TODO: Need to implement
         [[nodiscard]]
         constexpr auto operator[](
             const size_type index
-        ) const noexcept -> const_reference { return this->values_[index]; }
+        ) const noexcept -> const_reference;
 
     private:
         // ── Methods ─────────────────────────────────────────────────────────
@@ -100,230 +151,257 @@ namespace collections {
 
     public:
         // ── Methods ─────────────────────────────────────────────────────────
+        // TODO: Need to implement
+        constexpr void assign(const size_type count, const_reference value);
+
+        // TODO: Need to implement
+        template<std::input_iterator InputIt>
+        constexpr void assign(InputIt first, InputIt last);
+
+        // TODO: Need to implement
+        constexpr void assign(std::initializer_list<T> ilist);
+
+        // TODO: Need to implement
+        template<std::ranges::input_range R> requires(
+            std::convertible_to<std::ranges::range_reference_t<R>, value_type>
+        )
+        constexpr void assign_range(R&& rg);
+        
+        // TODO: Need to implement
+        constexpr auto at(const size_type index) -> reference;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        constexpr auto at(const size_type index) -> reference {
-            if (index >= N) [[unlikely]] {
-                throw std::out_of_range(
-                    "collections::array::at index out of range"
-                );
-            }
-            return this->values_[index];
-        }
+        constexpr auto at(const size_type index) const -> const_reference;
 
+        // TODO: Need to implement
+        constexpr auto front() -> reference;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        constexpr auto at(const size_type index) const -> const_reference {
-            if (index >= N) [[unlikely]] {
-                throw std::out_of_range(
-                    "collections::array::at index out of range"
-                );
-            }
-            return this->values_[index];
-        }
+        constexpr auto front() const -> const_reference;
 
+        // TODO: Need to implement
+        constexpr auto back() -> reference;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        constexpr auto expect_at(
-            const size_type index
-        ) noexcept -> std::expected<
-            std::reference_wrapper<value_type>, error
-        > {
-            if (index >= N) [[unlikely]] {
-                return std::unexpected(error::out_of_range);
-            }
-            return std::reference_wrapper<value_type>(this->values_[index]);
-        }
+        constexpr auto back() const -> const_reference;
 
+        // TODO: Need to implement
+        constexpr auto data() noexcept -> pointer;
+
+        // TODO: Need to implement
+        constexpr auto data() const noexcept -> const_pointer;
+
+        // TODO: Need to implement
+        constexpr auto begin() noexcept -> iterator;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        constexpr auto expect_at(
-            const size_type index
-        ) const noexcept -> std::expected<
-            std::reference_wrapper<const value_type>, error
-        > {
-            if (index >= N) [[unlikely]] {
-                return std::unexpected(error::out_of_range);
-            }
+        constexpr auto begin() const noexcept -> const_iterator;
 
-            return std::reference_wrapper<const value_type>(
-                this->values_[index]
-            );
-        }
-
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto front() noexcept -> reference {
-            return this->values_[0];
-        }
+        constexpr auto cbegin() const noexcept -> const_iterator;
 
+        // TODO: Need to implement
+        constexpr auto rbegin() noexcept -> reverse_iterator;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto front() const noexcept -> const_reference {
-            return this->values_[0];
-        }
+        constexpr auto rbegin() const noexcept -> const_reverse_iterator;
 
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto back() noexcept -> reference {
-            return this->values_[this->size() - 1];
-        }
+        constexpr auto crbegin() const noexcept -> const_reverse_iterator;
 
+        // TODO: Need to implement
+        constexpr auto end() noexcept -> iterator;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto back() const noexcept -> const_reference {
-            return this->values_[this->size() - 1];
-        }
+        constexpr auto end() const noexcept -> const_iterator;
 
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto data() noexcept -> pointer { return this->values_; }
+        constexpr auto cend() const noexcept -> const_iterator;
 
+        // TODO: Need to implement
+        constexpr auto rend() noexcept -> reverse_iterator;
+
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto data() const noexcept -> const_pointer {
-            return this->values_;
-        }
+        constexpr auto rend() const noexcept -> const_reverse_iterator;
 
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto begin() noexcept -> iterator { return this->values_; }
+        constexpr auto crend() const noexcept -> const_reverse_iterator;
 
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto end() noexcept -> iterator { return this->values_ + N; }
+        constexpr auto empty() const noexcept -> bool;
 
+        // TODO: Need to implement
         [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto begin() const noexcept -> const_iterator {
-            return this->values_;
-        }
+        constexpr auto size() const -> size_type;
 
-        [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto end() const noexcept -> const_iterator {
-            return this->values_ + N;
-        }
+        // TODO: Need to implement
+        static constexpr auto max_size() noexcept -> size_type;
 
-        [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto cbegin() const noexcept -> const_iterator {
-            return this->values_;
-        }
+        // TODO: Need to implement
+        static constexpr auto capacity() noexcept -> size_type;
 
-        [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto cend() const noexcept -> const_iterator {
-            return this->values_ + N;
-        }
+        // TODO: Need to implement
+        constexpr void resize(const size_type count);
 
-        [[nodiscard]]
-        constexpr auto rbegin() noexcept -> reverse_iterator {
-            return reverse_iterator(this->end());
-        }
+        // TODO: Need to implement
+        static constexpr void reserve(const size_type new_cap);
 
-        [[nodiscard]]
-        constexpr auto rend() noexcept -> reverse_iterator {
-            return reverse_iterator(this->begin());
-        }
+        // TODO: Need to implement
+        static constexpr void shrink_to_fit() noexcept;
 
-        [[nodiscard]]
-        constexpr auto rbegin() const noexcept -> const_reverse_iterator {
-            return const_reverse_iterator(this->end());
-        }
-
-        [[nodiscard]]
-        constexpr auto rend() const noexcept -> const_reverse_iterator {
-            return const_reverse_iterator(this->begin());
-        }
-
-        [[nodiscard]]
-        constexpr auto crbegin() const noexcept -> const_reverse_iterator {
-            return this->rbegin();
-        }
-
-        [[nodiscard]]
-        constexpr auto crend() const noexcept -> const_reverse_iterator {
-            return this->rend();
-        }
-
-        [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto empty() const noexcept -> bool { return N == 0; }
-
-        [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto size() const noexcept -> size_type { return N; }
-
-        [[nodiscard]]
-        [[gnu::always_inline]]
-        constexpr auto max_size() const noexcept -> size_type { return N; }
-
-        constexpr void fill(
+        // TODO: Need to implement
+        constexpr auto insert(
+            const_iterator index,
             const_reference value
-        ) noexcept (
-            std::is_nothrow_copy_assignable_v<value_type>
-        ) { std::fill(this->begin(), this->end(), value); }
+        ) -> iterator;
 
-        constexpr void swap(
-            array& other
-        ) noexcept (
-            noexcept(std::is_nothrow_swappable_v<value_type>)
-        ) { std::swap(this->values_, other.values_); }
+        // TODO: Need to implement
+        constexpr auto insert(
+            const_iterator index,
+            value_type&& value
+        ) -> iterator;
 
-        constexpr void sort() {
-            this->_sort(this->begin(), this->end(), std::less<value_type>{});
-        }
+        // TODO: Need to implement
+        constexpr auto insert(
+            const_iterator index,
+            const size_type count,
+            const_reference value
+        ) -> iterator;
 
-        template<std::contiguous_iterator Iterator = iterator>
-        constexpr void sort(Iterator first, Iterator last) {
-            if (first == last) [[unlikely]] {
-                return;
-            }
-            this->_sort(first, last, std::less<value_type>{});
-        }
+        // TODO: Need to implement
+        template<std::input_iterator InputIt>
+        constexpr auto insert(
+            const_iterator index,
+            InputIt first,
+            InputIt last
+        ) -> iterator;
 
-        template<
-            std::contiguous_iterator Iterator = iterator,
-            std::predicate<value_type, value_type> Predicate
-        >
-        constexpr void sort(Iterator first, Iterator last, Predicate pred) {
-            if (first == last) [[unlikely]] {
-                return;
-            }
-            this->_sort(first, last, pred);
-        }
+        // TODO: Need to implement
+        constexpr auto insert(
+            const_iterator index,
+            std::initializer_list<value_type> ilist
+        ) -> iterator;
 
-        constexpr void stable_sort() {
-            this->_stable_sort(
-                this->begin(),
-                this->end(),
-                std::less<value_type>{}
-            );
-        }
+        // TODO: Need to implement
+        template<std::ranges::input_range R> requires(
+            std::convertible_to<std::ranges::range_reference_t<R>, value_type>
+        )
+        constexpr auto insert_range(
+            const_iterator index,
+            R&& rg
+        ) -> iterator;
 
-        template<std::contiguous_iterator Iterator = iterator>
-        constexpr void stable_sort(Iterator first, Iterator last) {
-            if (first == last) [[unlikely]] {
-                return;
-            }
-            this->_stable_sort(first, last, std::less<value_type>{});
-        }
+        // TODO: Need to implement
+        template<typename... Args>
+        constexpr auto emplace(
+            const_iterator index,
+            Args&&... args
+        ) -> iterator;
 
-        template<
-            std::contiguous_iterator Iterator,
-            std::predicate<value_type, value_type> Predicate
-        >
-        constexpr void stable_sort(
-            Iterator first,
-            Iterator last,
-            Predicate pred
-        ) {
-            if (first == last) [[unlikely]] {
-                return;
-            }
-            this->_stable_sort(first, last, pred);
-        }
+        // TODO: Need to implement
+        template<typename... Args>
+        constexpr auto emplace_back(Args&&... args) -> reference;
+
+        // TODO: Need to implement
+        template<typename... Args>
+        constexpr auto try_emplace_back(
+            Args&&... args
+        ) -> std::optional<reference>;
+
+        // TODO: Need to implement
+        template<typename... Args>
+        constexpr auto unchecked_emplace_back(Args&&... args) -> reference;
+
+        // TODO: Need to implement
+        constexpr auto push_back(const_reference value) -> reference;
+
+        // TODO: Need to implement
+        constexpr auto push_back(value_type&& value) -> reference;
+
+        // TODO: Need to implement
+        constexpr auto try_push_back(
+            const_reference value
+        ) -> std::optional<reference>;
+
+        // TODO: Need to implement
+        constexpr auto try_push_back(
+            value_type&& value
+        ) -> std::optional<reference>;
+
+        // TODO: Need to implement
+        constexpr auto unchecked_push_back(
+            const_reference value
+        ) -> reference;
+
+        // TODO: Need to implement
+        constexpr auto unchecked_push_back(
+            value_type&& value
+        ) -> reference;
+
+        // TODO: Need to implement
+        constexpr void pop_back();
+
+        // TODO: Need to implement
+        template<std::ranges::input_range R> requires(
+            std::convertible_to<std::ranges::range_reference_t<R>, value_type>
+        )
+        constexpr void append_range(R&& rg);
+
+        // TODO: Need to implement
+        constexpr void clear() noexcept;
+
+        // TODO: Need to implement
+		constexpr auto erase(const_iterator pos) -> iterator;
+
+        // TODO: Need to implement
+        constexpr auto erase(
+            const_iterator first,
+            const_iterator last
+        ) -> iterator;
+
+        // TODO: Need to implement
+        constexpr void swap(inplace_vector& other) noexcept(
+            N == 0 ||
+            (std::is_nothrow_swappable_v<value_type> &&
+             std::is_nothrow_move_constructible_v<value_type>)
+        );
     };
 
     // ── Deduction Guides ────────────────────────────────────────────────────
-    template<typename T, typename... U> requires (std::same_as<T, U> && ...)
-    array(T, U...) -> array<T, 1 + sizeof...(U)>;
+
+    // ── Functions ───────────────────────────────────────────────────────────
+    template<typename T, std::size_t N>
+    constexpr friend void swap(
+        inplace_vector<T, N>& lhs,
+        inplace_vector<T, N>& rhs
+    ) noexcept(
+        N == 0 ||
+        (std::is_nothrow_swappable_v<T> && 
+        std::is_nothrow_move_constructible_v<T>)
+    );
+
+    template<typename T, std::size_t N, typename U = T>
+    constexpr auto erase(
+        inplace_vector<T, N>& vec,
+        const U& value
+    ) -> typename inplace_vector<T, N>::size_type;
+
+    template<typename T, std::size_t N, typename Pred>
+    constexpr auto erase_if(
+        inplace_vector<T, N>& vec,
+        Pred pred
+    ) -> typename inplace_vector<T, N>::size_type;
 } // namespace collections
-#endif // #ifndef COLLECTIONS_ARRAY_HPP
+#endif // #ifndef COLLECTIONS_INPLACE_VECTOR_HPP
