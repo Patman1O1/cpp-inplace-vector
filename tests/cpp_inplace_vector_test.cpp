@@ -3,8 +3,8 @@
 #include <gmock/gmock.h>
 
 // Local Includes
-#include <cpp_inplace_vector/cpp_inplace_vector.hpp>
+#include <collections/inplace_vector.hpp>
 
-namespace cpp_inplace_vector_testing {
+namespace inplace_vector_testing {
 
-} // namespace cpp_inplace_vector_testing
+} // namespace inplace_vector_testing
