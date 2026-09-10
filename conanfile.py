@@ -2,8 +2,8 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
 import os
 
-class CppInplaceVector(ConanFile):
-    name = "cpp_inplace_vector"
+class InplaceVector(ConanFile):
+    name = "inplace_vector"
     version = "0.1.0"
     author = "Patman1O1"
     description = ""
@@ -44,6 +44,6 @@ class CppInplaceVector(ConanFile):
     def package(self) -> None: CMake(self).install()
 
     def package_info(self) -> None:
-        self.cpp_info.set_property("cmake_target_name", "cpp_inplace_vector::cpp_inplace_vector")
+        self.cpp_info.set_property("cmake_target_name", "collections::inplace_vector")
         self.cpp_info.bindirs = []
         self.cpp_info.libdirs = []
