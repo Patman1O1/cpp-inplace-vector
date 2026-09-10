@@ -1,4 +1,0 @@
-#ifndef CPP_INPLACE_VECTOR_HPP
-#define CPP_INPLACE_VECTOR_HPP
-
-#endif // #ifndef CPP_INPLACE_VECTOR_HPP
